@@ -1,0 +1,61 @@
+Mitschrift für Arduino IOC:
+
+IOC erstellt mit makeBaseApp.pl
+nach dieser Anleitung:
+https://docs.epics-controls.org/en/latest/getting-started/HowToUseStreamDevice.html#create-a-test-application-optional
+
+in configure/RELEASE folgende Support Modules hinzugefügt:
+SUPPORT=/home/Daniel/EPICS/support
+ASYN=$(SUPPORT)/asyn
+STREAM=$(SUPPORT)/streamd
+CALC=$(SUPPORT)/calc
+
+Wir benötigen hier auch die CALC library, da sie den scalout Record beinhaltet, welcher von Stream benötigt wird.
+
+In App/src/Makefile folgende DBDs und LIBS hinzufügen:
+
+myIOC_DBD += calc.dbd
+myIOC_DBD += stream.dbd
+myIOC_DBD += asyn.dbd
+myIOC_DBD += drvAsynSerialPort.dbd
+
+und:
+
+myIOC_LIBS += calc stream asyn
+
+wenn man hier nicht calc auch hinzufügt, wird die Kompilation nicht funktionieren: siehe https://epics.anl.gov/tech-talk/2023/msg01295.php
+
+dann im Terminal im Top Ordner des IOCs 'make' ausführen
+
+jetzt kann ein db/ Ordner erstellt werden, in dem sich dann die .db und die .proto Files befinden.
+
+unter iocBoot/iocarduino/st.cmd müssen einige Sachen eingefügt werden:
+
+Environment-Variable setzen, welche zum Location zeigt, bei dem sich die .proto Files befinden:
+epicsEnvSet("STREAM_PROTOCOL_PATH","$(TOP)/db")
+
+USB-Port, an dem der Arduino angeschlossen ist, für die Verwendung in EPICS verfügbar machen:
+drvAsynSerialPortConfigure("ARDU","/dev/ttyUSB0",0,0,0)
+
+das müssten alle zwingenden Sachen sein, die man für dafür braucht. Sollten spezifischere Einstellungen benötigt werden, zum Beispiel wenn das Gerät nicht die Einstellungen automatisch erkennt, können noch weitere Sachen konfiguriert werden:
+asynSetOption("ARDU",-1,"baud","9600")
+asynSetOption("ARDU",-1,"bits","8")
+asynSetOption("ARDU",-1,"parity","none")
+asynSetOption("ARDU",-1,"stop","1")
+asynSetOption("ARDU",-1,"clocal","Y")
+asynSetOption("ARDU",-1,"crtscts","N")
+
+
+Ein Beispiel für die Verwendung des IOCs mit einem Arduino:
+db/arduino.db:
+record(ai, "arduino:val")
+{
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getVal $(PORT)")
+}
+
+db/arduino.proto:
+getVal {
+	out "get_val";
+	in "EPICS_rand_val %d";
+}

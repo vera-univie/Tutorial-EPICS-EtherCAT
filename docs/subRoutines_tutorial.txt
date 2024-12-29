@@ -1,0 +1,185 @@
+This document explains the process of using the subroutine (sub) record, and linking it to a C routine.
+It also explains how to use the ca-methods inside of your subroutine using cadef.h for example to write to another record using caput.
+
+For this example, we will be creating a subroutine for our veraBasic IOC.
+
+First, lets navigate to Application and then the Source folder of our IOC (e.g. veraBasic/Application/Source/ or veraBasic/veraBasicApp/src/ etc.)
+In this folder, you should see at least your Application.cpp file, a Makefile and a folder called O.Commons.
+This is the place where we will be creating our .c files which will contain our subroutines.
+For starters, lets create a new file called mySubRoutine.c and paste in example program from the EPICS documentation for a synchronous subroutine:
+
+----------------------
+#include <stdio.h>
+#include <dbDefs.h>
+#include <subRecord.h>
+#include <registryFunction.h>
+#include <epicsExport.h>
+
+static long subInit(struct subRecord *psub)
+{
+    printf("subInit was called\n");
+    return 0;
+}
+
+static long subProcess(struct subRecord *psub)
+{
+    psub->val++;
+    return 0;
+}
+
+epicsRegisterFunction(subInit);
+epicsRegisterFunction(subProcess);
+----------------------
+
+This file contains two subroutines called 'subInit' and 'subProcess' - the name is the same as the name of the function. Whenever you reference a subroutine, you must use this name.
+The parameter *psub in your routines is basically the record itself. So psub->val is the value of your subroutine record, while psub->a is the value of INPA.
+You can see all of these variables in subRecord.h
+There is no limit on how many subroutines you can define in a single file, and you can name them however you like.
+In this case, they were named subInit and subProcess for readability, however this does not define if they are an initalizing routine or a process routine.
+How/When they are called is only defined in the sub record in your .db file where the subroutines will finally be called (we will discuss this a bit later).
+There, the routine named in 'INAM' will called at initalization, and the routine named in 'SNAM' will be called every time the record is processed.
+
+In order for EPICS to recognize your subroutines, so that you can actually call them from your record, a few steps must be taken.
+
+Summary:
+1. Export subroutines at the end of your .c file
+2. Make sure the Makefile contains PROD_SRCS += mySubRoutine.c or myIocName_SRCS += mySubRoutine.c
+3. Add function(subroutineName) at the top of O.Commons/myIocName.dbd for each of your subroutines.
+4. In your Application/Source/ folder, call 'make'
+
+Step 1:
+In order for EPICS to be able to use a function in your C-file as a subroutine, you must first export it using epicsRegisterFunction(subroutineName);
+Do this for every one of your subroutines.
+
+Step 2:
+The .c file on its own cannot do anything, so it must be compiled.
+To make this easy, simply go into the Makefile on the same level as your .c file (e.g. Application/Source/Makefile) and add either:
+PROD_SRCS += mySubRoutine.c
+or, add:
+myIocName_SRCS += mySubRoutine.c
+
+This will cause your .c file to also be compiled and linked to EPICS when calling 'make'
+
+Step 3:
+In order for your exported functions to exist within the IOC while it is running, you must add them to the .dbd file.
+To do this, add this to the top of the myIocName.dbd (e.g. Application/Source/O.Commons/myIocName.dbd) for every subroutine:
+function(subroutineName)
+
+Step 4:
+Finally, in order to compile your .c file, in the terminal go back to Application/Source/ where it is located, and run 'make'.
+
+Now, every time you edit this file, before running your IOC, you have to make this folder again, in order for the changes to become active.
+If you ever create another seperate file, make sure to also add it to the Makefile
+
+
+Once your subroutine exists and is linked to EPICS, you can add it to your subroutine record.
+
+First, create a .db file which will contain your subroutine records and related records. (e.g. SUBROUTINES.db in veraBasic/db/)
+In this file, create a new record of the type 'sub'.
+Create a field called "INAM" and pass the name of the subroutine which should be run on initialization of the record.
+Create a field called "SNAM" and pass the name of the subroutine which should be run every time the record is processed. 
+
+See the documentation for information on the other field types. (e.g. inputs)
+
+Example:
+
+---------------------
+record(sub, "$(DEVICE):mySubRoutine")
+{
+  field("SCAN", "1 second")
+  field("INAM", "subInit")
+  field("SNAM", "subProcess")
+  field("INPA", "$(DEVICE):TESTING")
+}
+---------------------
+
+
+################################
+Enabling Channel Access Methods in your subroutines
+
+In order to use channel access methods such as caget and caput in our subroutines, we will use the cadef.h library, which is included in epics-base/include.
+Make sure to add #include <cadef.h> at the top of your program.
+
+To use caget and caput, you must take these steps in your program:
+1. ca_context_create() - Creates context for Channel Access in your subroutine
+2. ca_create_channel() - Creates a connection to a certain PV/Channel (e.g. myDevice:TESTING)
+3. ca_pend_io() - This is will have the program wait for a previous caget or caput, before executing the next
+4. ca_get() / ca_put() - Read from another record or write to another record
+
+Step 1 and 2 should be taken in the initialization of your record, while Step 3 and 4 will probably be in the process subroutine.
+
+Since all of these methods have some sort of return message or value, I would recommend wrapping them in SEVCHK(method, "error").
+
+See the documentation for explanation of the different kinds of parameters at:
+https://epics.anl.gov/base/R3-14/0beta2-docs/CAref.html
+
+ca_context_create():
+enum ca_preemptive_callback_select  
+    { ca_disable_preemptive_callback, ca_enable_preemptive_callback }; 
+int ca_context_create ( enum ca_preemptive_callback_select SELECT );
+-> in our case, we have to use ca_enable_preemptive_callback.
+
+ca_create_channel():
+int epicsShareAPI ca_create_channel
+(
+        const char     *PROCESS_VARIABLE_NAME, 
+        caCh           *USERFUNC, 
+        void           *PUSER,
+        capri          priority,
+        chid           *PCHID
+);
+-> you can set *USERFUNC and *PUSER to NULL. I have not needed priority so far, so I have just arbitrarily set it to 10 on all channels. *PCHID must point to a variable of type 'chid', which will basically contain this channel.
+
+ca_pend_io():
+int ca_pend_io ( double TIMEOUT );
+-> see documentation for explanation
+
+ca_put():
+int ca_put ( chtype TYPE, chid CHID, void *PVALUE ); 
+-> for TYPE we will almost always use DBR_CHAR, which is basically just a single Byte. CHID will be the variable containing our channel from ca_create_channel(), and *PVALUE must be a pointer to a variable, which is cast to (void*).
+
+ca_get() has the same arguments as ca_put(), except that *PVALUE now points to the variable where you want to store the value. This must again be a pointer cast to (void*)
+
+Example:
+---------------------------------
+#include <stdio.h>
+#include <dbDefs.h>
+#include <cadef.h>
+#include <subRecord.h>
+#include <registryFunction.h>
+#include <epicsExport.h>
+
+chid chidTesting;
+long int pvTesting;
+
+static long caInit(struct subRecord *psub)
+{
+	printf("caInit was called\n");
+    	SEVCHK(ca_context_create(ca_enable_preemptive_callback), "context create failed");
+	SEVCHK(ca_create_channel("LinuxI2:TESTING", NULL, NULL, 10, &chidTesting), "create channel failed");
+	pvTesting = 0;
+	printf("Init complete\n");
+    	return 0;
+}
+
+
+static long caProcess(struct subRecord *psub)
+{
+    	long int valA = ++psub->a;
+	SEVCHK(ca_pend_io(5), "pend io failed");
+	SEVCHK(ca_put(DBR_CHAR, chidTesting, (void*)&valA), "ca put failed");
+	SEVCHK(ca_get(DBR_CHAR, chidTesting, (void*)&pvTesting), "ca get failed");
+	printf("%ld\n", pvTesting);
+    	return 0;
+}
+
+// make sure to add function(caInit) and function(caProcess) to your IOC.dbd file in O.Common
+epicsRegisterFunction(caInit);
+epicsRegisterFunction(caProcess);
+--------------------------------------
+
+
+
+
+
+
