@@ -14,7 +14,7 @@ We have also tried to make this as understandable and easy to use as possible.
 
 To start from the beginning, check out our introduction_!
 
-.. _introduction: introduction
+.. _introduction: introduction.html
 
 .. note::
 
@@ -25,5 +25,6 @@ Contents
 
 .. toctree::
 
+   introduction
    usage
    api
