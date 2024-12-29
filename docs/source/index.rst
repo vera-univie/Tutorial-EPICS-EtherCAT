@@ -8,17 +8,15 @@ to control the electronics mainly through **EtherCAT** modules made by Beckhoff.
 You can check us out on our `instagram <https://www.instagram.com/project_vera.official/>`_ or on our `website <https://project-vera.webflow.io/>`_
 
 In the process of implementing EPICS and learning everything we could about it, we found that 
-finding a place to begin was very difficult, and it took a long time until we got some basic things to work.
+finding a place to begin was very difficult, and it took a long time until we got some basic things to work. 
+As a result, we have decided to make our knowledge in form of our documentation and some tutorials public. 
+We have also tried to make this as understandable and easy to use as possible.
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+To start from the beginning, check out our introduction_!
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+.. _introduction: introduction
 
-.. important::
+.. note::
 
    This project is under active development.
 
