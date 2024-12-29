@@ -2,9 +2,9 @@ Welcome to the Project VERA tutorial for EPICS / EtherCAT!
 ===================================
 
 **Project VERA** is a diploma project by students from the HTL Rennweg in Vienna, with the main focus being 
-the modernization of the **V\ **\ ienna **E**\ nvironmental **R**\ esearch **A**\ ccelerator at the University of Vienna. 
+the modernization of the *Vienna Environmental Research Accelerator* (VERA) at the University of Vienna. 
 One large aspect of this project is the introduction of a new process control system based on **EPICS**\ , which is meant 
-to control the electronics mainly through EtherCAT modules made by Beckhoff. 
+to control the electronics mainly through **EtherCAT** modules made by Beckhoff. 
 You can check us out on our `instagram <https://www.instagram.com/project_vera.official/>`_ or on our `website <https://project-vera.webflow.io/>`_
 
 In the process of implementing EPICS and learning everything we could about it, we found that 
