@@ -1,0 +1,354 @@
+NOTE: This file contains every step we took from scratch (after compiling the Kernel).
+Some things in this file will be outdated, such as the name we used for our ethercat folder
+where we used dls-controls instead of simply naming it ethercat.
+Also, in the installation process, certain files might not be able to be found online.
+One example is the pcre module for EPICS support. In this case, we have created our own github repo,
+where we have uploaded this, in case somebody would want to download it seperately again.
+
+We would highly recommend using the different scripts in order to set everything up, however this
+file can be used to understand all of the steps we took and could be used for troubleshooting.
+
+##########################################################
+EtherCAT - Master (EtherLAB)
+##########################################################
+
+mkdir ~/EPICS ; cd $_ 
+sudo apt install git
+git clone https://gitlab.com/etherlab.org/ethercat.git ~/EPICS/ethercat-master-etherlab 
+cd ethercat-master-etherlab
+sudo apt install autoconf dh-autoreconf pkgconf
+./bootstrap
+
+./configure --prefix=/opt/etherlab --sysconfdir=/etc --with-module-dir=ethercat --enable-generic=yes --enable-wildcards=yes --enable-8139too=no --with-linux-dir=/usr/src/linux-source-6.1 --enable-hrtimer --enable-tool --enable-sii-assign --enable-eoe --enable-cycles -enable-regalias
+## on this command, first check in /usr/src/ if your folder is also called linux-source-6.1 . If not, change --with-linux-dir in the previous command to the right adress
+
+make
+make modules
+sudo make install
+sudo make modules_install
+sudo /usr/sbin/depmod
+sudo apt install nedit lshw
+
+lshw -c network
+## here you choose the ethernet port you wish to use as a EtherCAT port and take note of the "serial" and "logicalname" values.
+## in my case (network:0): logicalname = enp2s0f0 ; serial = 3c:49:37:05:b1:64
+
+sudo nedit /etc/ethercat.conf
+## change MASTER0_DEVICE to your serial value (e.g. MASTER0_DEVICE="3c:49:37:05:b1:64")
+## change DEVICE_MODULES to "generic" (DEVICE_MODULES="generic")
+## add a line with UPDOWN_INTERFACES and make it the logicalname (e.g. UPDOWN_INTERFACES="enp2s0f0")
+
+sudo nedit /etc/sysconfig/ethercat
+## do the same changes as in the previous step
+
+su -
+## now you need to enter your root password
+echo KERNEL==\"EtherCAT[0-9]*\", MODE=\"0664\" > /etc/udev/rules.d/99-EtherCAT.rules
+
+^D
+## Ctrl+D (or Strg+D) to logout of the root
+
+sudo /etc/init.d/ethercat restart
+
+/opt/etherlab/bin/ethercat cstruct
+## if Beckhoff modules are connected via the correct port, this command should display all of the connected Modules with their information
+## if modules are connected, but still nothing appears, try connecting the network cable to your other ethernet port and try again
+
+/opt/etherlab/bin/ethercat slaves
+## displays all of the connected modules and their status
+
+/opt/etherlab/bin/ethercat cstruct
+
+##########################################################
+EPICS
+##########################################################
+
+cd ~/EPICS/
+git clone --recursive https://github.com/epics-base/epics-base.git
+sudo apt install g++
+cd epics-base
+make
+## this will take a while (perhaps around 15 min)
+
+nedit $HOME/.bashrc
+## add these lines at the end of the file:
+export EPICS_BASE=/home/htlrennweg/EPICS/epics-base ## replace 'htlrennweg' with your user (e.g. 'csadmin')
+export EPICS_HOST_ARCH=$(${EPICS_BASE}/startup/EpicsHostArch)
+export PATH=${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
+##
+
+sudo shutdown -r now
+# Restart required
+# when you restart, click on your network symbol at the top right of your screen, and select "wired connection 1" to connect back the internet
+# this is because when you restart, the computer can use your EtherCAT port as your Ethernet Network port
+
+softIoc
+## opens EPICS environment in console
+exit
+## exits the EPICS environment
+
+###################
+Needed modules for EPICS
+
+seq
+pcre
+sscan
+calc
+asyn
+streamd
+memDisplay
+regDev
+autosave
+busy
+
+--------
+
+cd ~/EPICS
+mkdir support
+cd support
+
+###################
+Information for setting up the modules for EPICS
+
+Your EPICS_BASE is located at /home/htlrennweg/EPICS/epics-base ## replace htlrennweg with your user
+Your SUPPORT is located at /home/htlrennweg/EPICS/support ## replace htlrennweg with your user
+
+Every time you download one of these modules, you will have to edit its configure/RELEASE file
+there you will change EPICS_BASE to the correct value. If it is not there, then add it manually
+if you see SUPPORT, then also change that to the correct value
+if there (uncommented) variables that should point to other installed modules (as long as you have them installed), enter the correct path to those modules
+## e.g. ASYN=$(SUPPORT)/asyn
+## OR e.g. ASYN=/home/htlrennweg/EPICS/suppport/asyn
+if there are any extra notes on lines to add or files to edit, then also do that
+
+(DON'T FORGET TO SAVE THE FILE BEFORE CLOSING IT)
+
+once done with editing the files, use 'make clean; make'
+##################
+
+
+## Download seq
+sudo apt install re2c
+git clone https://github.com/ISISComputingGroup/EPICS-seq.git seq
+cd seq
+nedit configure/RELEASE ## edit RELEASE file
+## comment out the last two 'include' lines that contain 'ISIS'
+make clean; make
+
+## Download pcre
+cd ~/EPICS/support
+## Go to https://github.com/AleksanderLugonjic/VERA-Distributed-Control-System
+## Download pcre-8-44-20240709T142743Z-001.zip from EPICS/support and unzip it into your own support folder
+## Rename it to pcre
+cd pcre
+nedit configure/RELEASE ## edit RELEASE file
+make clean; make
+
+## Download sscan
+cd ~/EPICS/support
+git clone https://github.com/epics-modules/sscan.git sscan
+cd sscan
+nedit configure/RELEASE ## edit RELEASE file
+make clean; make
+
+## Download calc
+cd ~/EPICS/support
+git clone https://github.com/epics-modules/calc.git calc
+cd calc
+nedit configure/RELEASE ## edit RELEASE file
+## uncomment SNCSEQ and change it the right path
+make clean; make
+
+## Download asyn
+cd ~/EPICS/support
+git clone https://github.com/epics-modules/asyn.git asyn
+cd asyn
+nedit configure/RELEASE ## edit RELEASE file
+## uncomment and edit SNCSEQ, CALC, SSCAN
+nedit configure/CONFIG_SITE
+## uncomment TIRPC=YES (relatively at the bottom of the file
+make clean; make
+
+## Download streamd (Stream Device)
+cd ~/EPICS/support
+git clone https://github.com/paulscherrerinstitute/StreamDevice.git streamd
+cd streamd
+rm GNUmakefile
+nedit configure/RELEASE ## edit RELEASE file
+make clean uninstall install
+
+## Download memDisplay
+cd ~/EPICS/support
+git clone https://github.com/paulscherrerinstitute/memDisplay.git memDisplay
+cd memDisplay
+nedit configure/RELEASE ## edit RELEASE file
+make clean; make
+
+## Download regDev
+cd ~/EPICS/support
+git clone https://github.com/paulscherrerinstitute/regdev.git regDev
+cd regDev
+nedit configure/RELEASE ## edit RELEASE file
+rm GNUmakefile
+make clean; make
+
+## Download autosave
+cd ~/EPICS/support
+git clone https://github.com/epics-modules/autosave.git autosave
+cd autosave
+nedit configure/RELEASE ## edit RELEASE file
+make clean; make
+
+## Download busy
+cd ~/EPICS/support
+git clone https://github.com/epics-modules/busy.git busy
+cd busy
+nedit configure/RELEASE ## edit RELEASE file
+## correct all of the paths
+make clean; make
+
+###### REBOOT
+sudo shutdown -r now
+
+
+#########################
+dls-controlls (EtherCAT with EPICS)
+#########################
+
+#########
+One one of these appears, change it to this:
+
+VERSION=
+ETHERLAB=/opt/etherlab/bin
+ETHERLABPREFIX=$(ETHERLAB)/..
+ETHERCAT=/home/htlrennweg/EPICS/dls-controlls
+ECASYN=/home/htlrennweg/EPICS/dls-controlls
+ASYN=/home/htlrennweg/EPICS/support/asyn
+SUPPORT=/home/htlrennweg/EPICS/support
+EPICS_BASE=/home/htlrennweg/EPICS/epics-base
+#########
+
+
+cd ~/EPICS/
+git clone https://github.com/dls-controls/ethercat.git dls-controlls
+cd dls-controlls
+nedit configure/RELEASE ## edit RELEASE file (like before)
+
+nedit ethercatApp/scannerSrc/Makefile
+## change these lines to look like this:
+VERSION=
+ETHERLAB=/opt/etherlab/bin
+ETHERLABPREFIX=$(ETHERLAB)/..
+## and add this line right underneath (with your own user instead of htlrennweg)
+ETHERCAT_MASTER_ETHERLAB=/home/htlrennweg/EPICS/ethercat-master-etherlab
+##
+## change scanner_INCLUDES to += -I$(ETHERCAT_MASTER_ETHERLAB)/lib
+## change serialtool_INCLUDES to += -I$(ETHERCAT_MASTER_ETHERLAB)/master
+## change get-slave-revisions_INCLUDES to += -I$(ETHERCAT_MASTER_ETHERLAB)/master
+
+nedit ethercatApp/src/Makefile
+## make the same changes as before (this time no ETHERLABPREFIX exists, so ignore that)
+
+nedit iocs/es3602-test/configure/RELEASE
+## make the typical changes. Also change ETHERCAT to /home/htlrennweg/EPICS/dls-controlls
+nedit iocs/ni9144-rev4-w9239-slot1/configure/RELEASE ## make typical changes
+nedit iocs/simulationTest/configure/RELEASE ## make typical changes
+nedit iocs/ni9144-3modules/configure/RELEASE ## make typical changes
+nedit iocs/iocTest/configure/RELEASE ## make typical changes
+## change ECASYN to path of dls-controlls (so /home/htlrennweg/EPICS/dls-controlls)
+nedit iocs/i12test/configure/RELEASE ## make typical changes
+nedit iocs/scanTest/configure/RELEASE ## make typical changes
+nedit etc/capture_wave/configure/RELEASE ## make typical changes
+
+sudo apt install icu-devtools libicu-dev libxml2-dev -y
+
+in file ~/EPICS/dls-controlls/ethercatApp/scannerSrc/scanner.c
+## comment out #include "liberror.h"
+## comment out line 294
+## comment out line 503, add this line underneath:
+fprintf(stderr,"etherlab library error:");
+##
+
+copy ecrt.h from ~/EPICS/ethercat-master-etherlab/include into:
+~/EPICS/dls-controlls/include
+~/EPICS/dls-controlls/ethercatApp/scannerSrc
+
+in ~/EPICS/dls-controlls/Makefile comment out line 8:
+# DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard etc))
+##
+
+make clean; make
+
+
+NOTE TO SELF: we will later create the IOCs completely on our own, and not use the example ones
+
+cd ~/EPICS/dls-controlls/etc/scripts
+touch chain.xml
+## add this to chain.xml:
+<chain>
+<device type_name="EK1100" revision="0x00110000" position="0" name="COUPLER_00" />
+<device type_name="EL2808" revision="0x00120000" position="1" name="DO_00" />
+<device type_name="EL2808" revision="0x00120000" position="2" name="DO_01" />
+<device type_name="EL2808" revision="0x00120000" position="3" name="DO_02" />
+</chain>
+##
+
+nedit Makefile
+## replace all dls-python with python3
+
+replaced expandChain.py file with modified version for python3
+
+sudo apt install python3-libxml2
+
+cd ~EPICS/dls-controlls/etc/scripts
+
+download (from our Google Drive) and replace:
+~EPICS/dls-controlls/etc/builder/build_iocbuilder_descriptions.py
+~EPICS/dls-controlls/etc/builder/ethercat.py
+
+python3 expandChain.py chain.xml > scanner.xml
+
+copy scanner.xml and chain.xml into iocs/scanTest/etc (replace the existing ones there)
+
+comment out line 7 in ~/EPICS/dls-controlls/iocs/scanTest/etc/Makefile
+# $(ECASYN)/etc/scripts/expandChain.py chain-ni.xml > scanner-ni.xml
+
+create templates for the used modules with etc/scripts/maketemplate.py if needed
+
+replace maketemplate.py with python3 version from Google Drive
+
+cd ~/EPICS/dls-controlls/iocs/scanTest/scanTestApp
+make clean; make
+
+copy scantest.dbd from scanTestApp/src/O.Common to dls-controlls/dbd
+
+cd ~/EPICS/dls-controlls/etc/scripts
+python3 maketemplate.py -b ../xml/ -d EL2808 -r 0x00120000 -o ../../db/EL2808.template 
+
+under iocs/scanTest/st.cmd you must edit the dbLoadRecords() calls
+e.g. dbLoadRecords("../../db/EK1100.template", "DEVICE=VERA:1,PORT=COUPLER_00,SCAN=I/O Intr")
+also edit line 1 to add _64: #!bin/linux-x86_64/scantest
+
+Start EtherCAT master in seperate Terminal:
+su -
+/etc/init.d/ethercat start
+
+Back in original Terminal:
+sudo ../../../bin/linux-x86_64/scanner scanner.xml "/tmp/scan1"
+
+./st.cmd
+-> EPICS Terminal is opened
+dbl ## displays process variables
+
+in a different Terminal: caput to set a value, caget to get a value
+e.g. caput VERA:2:CHANNEL1:OUTPUT 1
+
+
+Next steps: controlling from a different computer on the same network
+
+
+
+
+
+
+
