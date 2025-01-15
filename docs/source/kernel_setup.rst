@@ -12,8 +12,10 @@ The installation of this will take some time, so take into account that your mac
 .. code-block:: shell
 
    $ echo "Hello, World!"
+   
+   $ su -
 
 
-well hello this is a test
+use the ``su -`` command.
 
 
