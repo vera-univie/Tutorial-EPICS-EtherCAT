@@ -18,4 +18,4 @@ The installation of this will take some time, so take into account that your mac
 
 use the ``su -`` command.
 
-
+or use the :command:`su -` command :)
