@@ -9,7 +9,7 @@ The installation of this will take some time, so take into account that your mac
     This actually might not be necessary, but we had to do it on our computers. Once we find a way of doing all the steps without this kernel, we will add it to the documentation.
 
 
-.. code-block:: shell
+.. code-block:: console
 
    $ echo "Hello, World!"
    
