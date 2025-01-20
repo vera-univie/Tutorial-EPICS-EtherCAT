@@ -14,7 +14,7 @@ Instructions
 
 First, open a terminal window and enter your root directory by typing ``su -`` and then entering your password.
 
-Then follow these steps:
+Then follow these steps: (each line with a '$' in front is a command that you should type)
 
 .. code-block:: console
 

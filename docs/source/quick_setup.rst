@@ -12,19 +12,29 @@ Automated Setup
 
 First, we need to download the shell scripts that we will use for our quick setup. These can be found on our GitHub page 
 under `github.com/vera-univie/Automated-Setup <https://github.com/vera-univie/Automated-Setup>`_. From there, download or clone the repository to the location on your 
-computer where you would like your 'EPICS' and/or 'EtherCAT' folder to be located. Then rename the folder from 'Automated-Setup' to 'EPICS'.
+computer where you would like your *EPICS* and/or *EtherCAT* folder to be located. Then rename the folder from 'Automated-Setup' to 'EPICS'.
 
-This folder contains a 'scripts' folder, in which you will find all the shell scripts for this quick setup. Furthermore, this 'EPICS' folder will be the location 
+This folder contains a *scripts* folder, in which you will find all the shell scripts for this quick setup. Furthermore, this *EPICS* folder will be the location 
 where all your EPICS-related things will be installed in the process of this setup. 
 
 EtherCAT Master
 --------------------------
 
 .. note::
-    EtherCAT Master is a separate tool to EPICS, and we just so happen to be using them together. You can of course also install EPICS without having EtherCAT Master 
+    EtherCAT Master is a separate tool to EPICS, and we just so happen to be using them together. You can of course also install EPICS without EtherCAT Master 
     and still use all of its functionalities and use it with other devices. **If you do not want install EtherCAT Master, you can completely skip this step**.
 
 .. important::
-    Before installing the EtherCAT Master, make sure that you have an appropriate kernel running on your computer. You can follow `this guide <kernel_setup.html>`_ 
+    Before installing the EtherCAT Master, make sure that you have an appropriate kernel running on your computer. You can follow **`our kernel setup guide <kernel_setup.html>`_** 
     to get the same kernel as ours. Note that this can take multiple hours to install.
 
+
+To get started, open up a terminal window, and **cd** into *.../EPICS/scripts/*
+
+Make sure that you have the necessary permissions to execute the scripts in this folder:
+
+.. command-block:: shell+
+    sudo chmod u+x .
+
+
+skibidi
