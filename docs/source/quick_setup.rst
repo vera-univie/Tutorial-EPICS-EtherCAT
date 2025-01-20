@@ -24,6 +24,7 @@ EtherCAT Master
     EtherCAT Master is a separate tool to EPICS, and we just so happen to be using them together. You can of course also install EPICS without EtherCAT Master 
     and still use all of its functionalities and use it with other devices. **If you do not want install EtherCAT Master, you can completely skip this step**.
 
+
 .. important::
     Before installing the EtherCAT Master, make sure that you have an appropriate kernel running on your computer. You can follow **`our kernel setup guide <kernel_setup.html>`_** 
     to get the same kernel as ours. Note that this can take multiple hours to install.
@@ -33,7 +34,7 @@ To get started, open up a terminal window, and **cd** into *.../EPICS/scripts/*
 
 Make sure that you have the necessary permissions to execute the scripts in this folder:
 
-.. command-block:: shell+
+.. code-block:: shell
     sudo chmod u+x .
 
 
