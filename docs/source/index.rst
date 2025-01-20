@@ -20,11 +20,9 @@ To start from the beginning, check out our introduction_!
 
    This project is under active development.
 
-Contents
---------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Guides
 
    introduction
