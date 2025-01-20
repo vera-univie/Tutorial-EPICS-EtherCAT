@@ -33,14 +33,19 @@ To get started, open up a terminal window, and **cd** into ``.../EPICS/scripts/`
 
 Make sure that you have the necessary permissions to execute the scripts in this folder:
 
+This script will create and install the EtherCAT Master into a folder named *EtherLAB*, which will be on the same level as your *EPICS* folder.
 
-.. code-block:: bash
+
+.. code-block:: console
 
     $ sudo chmod u+x .
 
 
 Then execute the setup file:
 
-.. code-block:: bash
+.. code-block:: console
 
-    sudo ./ethercat_setup.sh
+    $ sudo ./ethercat_setup.sh
+
+
+You will be prompted some questions in your terminal, so just follow those steps.
