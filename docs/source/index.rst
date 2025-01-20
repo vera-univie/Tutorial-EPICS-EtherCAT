@@ -27,7 +27,6 @@ Contents
    :maxdepth: 2
    :caption: Guides
 
-   index
    introduction
    kernel_setup
 
