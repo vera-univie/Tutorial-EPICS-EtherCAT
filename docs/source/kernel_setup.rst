@@ -19,8 +19,8 @@ Then follow these steps:
 .. code-block:: console
 
     $ apt-cache search linux-source
-        \# linux-source - Linux kernel source (meta-package) 
-        \# linux-source-6.1 - Linux kernel source for version 6.1 with Debian patches 
+        # linux-source - Linux kernel source (meta-package) 
+        # linux-source-6.1 - Linux kernel source for version 6.1 with Debian patches 
 
     $ apt install linux-source-6.1
 
@@ -44,7 +44,7 @@ Then follow these steps:
     $ scripts/config --disable DEBUG_INFO 
 
     $ make nconfig 
-        \# Do not make any changes - press :command:`F9` to exit, then <save>
+        # Do not make any changes - press :command:`F9` to exit, then <save>
 
     $ apt install pahole 
 
@@ -58,7 +58,7 @@ This will take quite a while, so expect to have your computer running for 2 or m
 
     $ make -j5 bindeb-pkg
 
-    \#\# Wait for this to finish compiling - this will take a while, then do the following commands
+    ## Wait for this to finish compiling - this will take a while, then do the following commands
 
     $ ls ../ 
         linux-headers-6.1.94_6.1.94-2_amd64.deb 
@@ -70,11 +70,11 @@ This will take quite a while, so expect to have your computer running for 2 or m
         linux-upstream_6.1.94-2_amd64.buildinfo 
         linux-upstream_6.1.94-2_amd64.changes 
     
-    \# We will choose the 'linux-image' **WITHOUT** the 'dbg' in its name!
+    # We will choose the 'linux-image' **WITHOUT** the 'dbg' in its name!
 
     $ sudo dpkg –i ../linux-image-6.1.94_6.1.94-2_amd64.deb
 
-    \#\# The Kernel should now be installed, so restart your computer:
+    ## The Kernel should now be installed, so restart your computer:
 
     $ sudo shutdown -r now
 
