@@ -26,6 +26,7 @@ To start from the beginning, check out our introduction_!
    :caption: Guides
 
    introduction
+   quick_setup
    kernel_setup
 
    
