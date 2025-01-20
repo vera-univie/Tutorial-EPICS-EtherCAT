@@ -30,12 +30,10 @@ EtherCAT Master
     to get the same kernel as ours. Note that this can take multiple hours to install.
 
 
-To get started, open up a terminal window, and **cd** into *.../EPICS/scripts/*
+To get started, open up a terminal window, and **cd** into ``.../EPICS/scripts/``
 
 Make sure that you have the necessary permissions to execute the scripts in this folder:
 
-.. code-block:: shell
-    sudo chmod u+x .
+.. code-block:: console
+    $ sudo chmod u+x .
 
-
-skibidi
