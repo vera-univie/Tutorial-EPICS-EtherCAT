@@ -54,7 +54,7 @@ Then follow these steps:
 Now, before executing the following command - if you have little RAM memory - close your other windows to minimize unnecessary RAM usage. 
 This will take quite a while, so expect to have your computer running for 2 or more hours.
 
-.. code-block:: console
+.. code-block:: shell
 
     $ make -j5 bindeb-pkg
 
