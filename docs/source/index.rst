@@ -25,8 +25,10 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started
+   :caption: Guides
 
+   index
    introduction
-   usage
-   api
+   kernel_setup
+
+   
