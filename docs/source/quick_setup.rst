@@ -33,10 +33,14 @@ To get started, open up a terminal window, and **cd** into ``.../EPICS/scripts/`
 
 Make sure that you have the necessary permissions to execute the scripts in this folder:
 
+
 .. code-block:: console
+
     $ sudo chmod u+x .
+
 
 Then execute the setup file:
 
-.. code-block:: console
-    $ sudo ./ethercat_setup.sh
+.. code-block:: shell
+
+    sudo ./ethercat_setup.sh
