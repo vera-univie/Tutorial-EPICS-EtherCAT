@@ -32,21 +32,11 @@ EtherCAT Master
     EtherCAT Master is a separate tool to EPICS, and we just so happen to be using them together. You can of course also install EPICS without EtherCAT Master 
     and still use all of its functionalities and use it with other devices. **If you do not want install EtherCAT Master, you can completely skip this step**.
 
+.. _kernel:
 .. important::
     Before installing the EtherCAT Master, make sure that you have an appropriate kernel running on your computer. You can follow `our kernel setup guide <kernel_setup.html>`_ 
     to get the same kernel as ours. Note that this can take multiple hours to install.
 
-
-Folder structure after EtherCAT Master setup::
-
-    .../EPICS
-        -> /scripts/
-        -> Build_Kernel.txt
-        -> ReadMe.md
-        -> StepByStep_EPICS_EtherCAT.txt
-    ## After EtherCAT installation:
-    .../EtherLAB
-        -> /ethercat-master-etherlab/
 
 To get started, open up a terminal window, and **cd** into ``.../EPICS/scripts/``
 
@@ -60,13 +50,17 @@ Make sure that you have the necessary permissions to execute the scripts in this
 
 Then execute the setup file. This script will create and install the EtherCAT Master into a folder named ``/EtherLAB``, which will be on the same level as your ``/EPICS`` folder.
 
+Folder structure after EtherCAT Master setup::
+
+    .../EPICS
+    .../EtherLAB
+        -> /ethercat-master-etherlab/
+
 .. code-block:: console
 
     $ sudo ./ethercat_setup.sh
 
 
-You will be prompted some questions in your terminal, so just follow those steps.
+A list of your ``/usr/src/`` folder will appear, and you will be prompted whether or not it contains ``linux-source-6.1``. If not, you can choose a different source path, or continue without one.
+(This is where the :ref:`kernel` comes into play)
 
-Here is a literal codeblock::
-
-    it's contents are indented.
