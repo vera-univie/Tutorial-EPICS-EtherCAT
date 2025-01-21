@@ -8,7 +8,7 @@ we took to manually install EPICS and EtherCAT.
 
 
 Automated Setup
---------------------------
+-------------------
 
 First, we need to download the shell scripts that we will use for our quick setup. These can be found on our GitHub page 
 under `github.com/vera-univie/Automated-Setup <https://github.com/vera-univie/Automated-Setup>`_. From there, download or clone the repository to the location on your 
@@ -25,9 +25,9 @@ Folder structure::
         -> ReadMe.md
         -> StepByStep_EPICS_EtherCAT.txt
 
-======================
+
 EtherCAT Master Setup
-======================
+===============================
 
 .. note::
     EtherCAT Master is a separate tool to EPICS, and we just so happen to be using them together. You can of course also install EPICS without EtherCAT Master 
@@ -75,7 +75,7 @@ Confirm the right port has been chosen by checking the ``serial`` and ``logical 
 If you need to change the designated EtherCAT port, then you can simply run the setup script again, go through the same steps, and choose a different port. 
 Since it will have already installed and compiled EtherCAT, it should only take a moment until the script arrives at the point where you can choose the port.
 
-========================
+
 EPICS Setup
 ========================
 
