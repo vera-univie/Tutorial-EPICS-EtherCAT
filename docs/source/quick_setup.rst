@@ -25,8 +25,9 @@ Folder structure::
         -> ReadMe.md
         -> StepByStep_EPICS_EtherCAT.txt
 
-EtherCAT Master
---------------------------
+======================
+EtherCAT Master Setup
+======================
 
 .. note::
     EtherCAT Master is a separate tool to EPICS, and we just so happen to be using them together. You can of course also install EPICS without EtherCAT Master 
@@ -73,6 +74,10 @@ Confirm the right port has been chosen by checking the ``serial`` and ``logical 
 
 If you need to change the designated EtherCAT port, then you can simply run the setup script again, go through the same steps, and choose a different port. 
 Since it will have already installed and compiled EtherCAT, it should only take a moment until the script arrives at the point where you can choose the port.
+
+========================
+EPICS Setup
+========================
 
 
 
