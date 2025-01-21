@@ -48,7 +48,7 @@ Make sure that you have the necessary permissions to execute the scripts in this
     $ sudo chmod u+x .
 
 
-Then execute the setup file. This script will create and install the EtherCAT Master into a folder named ``/EtherLAB``, which will be on the same level as your ``/EPICS`` folder.
+This script will create and install the EtherCAT Master into a folder named ``/EtherLAB``, which will be on the same level as your ``/EPICS`` folder.
 
 Folder structure after EtherCAT Master setup::
 
@@ -56,11 +56,23 @@ Folder structure after EtherCAT Master setup::
     .../EtherLAB
         -> /ethercat-master-etherlab/
 
+Execute the setup file. 
+
 .. code-block:: console
 
     $ sudo ./ethercat_setup.sh
 
 
-A list of your ``/usr/src/`` folder will appear, and you will be prompted whether or not it contains ``linux-source-6.1``. If not, you can choose a different source path, or continue without one.
-(This is where the :ref:`kernel` comes into play)
+A list of your ``/usr/src/`` folder will appear, and you will be prompted on whether or not it contains ``linux-source-6.1``. If not, you can choose a different source path, or continue without one.
+(This is where the `kernel <kernel_setup.html>`_ comes into play)
+
+Once it is finished with installing and compiling, it will display your possible Ethernet ports. Choose one, which shall be your designated EtherCAT port, 
+by typing the ID of that port. 
+
+Confirm the right port has been chosen by checking the ``serial`` and ``logical name``.
+
+If you need to change the designated EtherCAT port, then you can simply run the setup script again, go through the same steps, and choose a different port. 
+Since it will have already installed and compiled EtherCAT, it should only take a moment until the script arrives at the point where you can choose the port.
+
+
 
