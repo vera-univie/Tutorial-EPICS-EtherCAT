@@ -6,9 +6,9 @@ To get started quickly, you can use our automated installation scripts to quickl
 If you are having problems with parts of the installation or the setup, you can take a look at our manual `Step-By-Step documentation <stepbystep_install.html>`_, where we list each step that 
 we took to manually install EPICS and EtherCAT.
 
-=========================
+
 Automated Setup
-=========================
+-------------------------
 
 First, we need to download the shell scripts that we will use for our quick setup. These can be found on our GitHub page 
 under `github.com/vera-univie/Automated-Setup <https://github.com/vera-univie/Automated-Setup>`_. From there, download or clone the repository to the location on your 
@@ -77,7 +77,7 @@ Since it will have already installed and compiled EtherCAT, it should only take 
 
 
 EPICS Setup
------------------------
+-------------------------
 
 
 
