@@ -127,8 +127,7 @@ To set up the necessary EPICS support modules, follow these steps:
 
 4. You will be prompted to enter the username for which EPICS support should be installed. Enter the username and press Enter.
 
-5. You will be asked whether you want to install the newest versions of the support modules or a stable version from the GitHub repository. Enter 'y' for the newest versions or 'n' for the stable version. 
-Installing the stable version is recommended, since this is the version it has been tested with.
+5. You will be asked whether you want to install the newest versions of the support modules or a stable version from the GitHub repository. Enter 'y' for the newest versions or 'n' for the stable version. Installing the stable version is recommended, since this is the version it has been tested with.
 
 6. The script will clone the necessary repositories, install required libraries, and compile the support modules into ``.../EPICS/support``.
 
