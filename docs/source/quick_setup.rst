@@ -3,9 +3,17 @@ Quick Setup
 
 To get started quickly, you can use our automated installation scripts to quickly and easily install and setup EPICS and EtherCAT on your Debian 12 computer.
 
-If you are having problems with parts of the installation or the setup, you can take a look at our manual `Step-By-Step documentation <stepbystep_install.html>`_, where we list each step that 
+If you are having problems with parts of the installation or the setup, you can take a look at our manual `Step-By-Step documentation <manual_setup.html>`_, where we list each step that 
 we took to manually install EPICS and EtherCAT.
 
+.. note::
+    Ensure you have administrative privileges before starting the setup process.
+
+Prerequisites
+-------------------------------
+- Debian 12 installed on your computer
+- Basic knowledge of Linux command line
+- Internet connection
 
 Automated Setup
 -------------------------
@@ -57,7 +65,7 @@ Folder structure after EtherCAT Master setup::
     .../EtherLAB
         -> /ethercat-master-etherlab/
 
-Execute the setup file. 
+Execute the setup file:
 
 .. code-block:: console
 
