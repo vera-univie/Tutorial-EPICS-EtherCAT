@@ -82,6 +82,7 @@ EPICS Base Setup
 To set up EPICS base, follow these steps:
 
 1. Open a terminal window and **cd** into ``.../EPICS/scripts/``.
+
 2. Ensure you have the necessary permissions to execute the script:
 
 .. code-block:: console
@@ -95,8 +96,11 @@ To set up EPICS base, follow these steps:
     $ sudo ./epics-base_setup.sh
 
 4. You will be prompted to enter the username for which EPICS base should be installed. Enter the username and press Enter.
+
 5. The script will clone the EPICS base repository, install necessary libraries, and compile EPICS base into ``.../EPICS/epics-base``.
+
 6. The script will append the necessary environment variables to the user's `.bashrc` file.
+
 7. Once the installation is complete, you will be prompted to restart your computer. Enter 'y' to restart immediately or 'n' to restart later.
 
 After restarting, EPICS base should be installed and ready to use.
@@ -108,6 +112,7 @@ EPICS Support Modules Setup
 To set up the necessary EPICS support modules, follow these steps:
 
 1. Open a terminal window and **cd** into ``.../EPICS/scripts/``.
+
 2. Ensure you have the necessary permissions to execute the script:
 
 .. code-block:: console
@@ -121,9 +126,12 @@ To set up the necessary EPICS support modules, follow these steps:
     $ sudo ./epics-support_setup.sh
 
 4. You will be prompted to enter the username for which EPICS support should be installed. Enter the username and press Enter.
-5. You will be asked whether you want to install the newest versions of the support modules or a stable version from the GitHub repository. Enter 'y' for the newest versions or 'n' for the stable version.
+
+5. You will be asked whether you want to install the newest versions of the support modules or a stable version from the GitHub repository. Enter 'y' for the newest versions or 'n' for the stable version. 
 Installing the stable version is recommended, since this is the version it has been tested with.
+
 6. The script will clone the necessary repositories, install required libraries, and compile the support modules into ``.../EPICS/support``.
+
 7. Once the installation is complete, the support modules should be ready to use.
 
 After completing these steps, your EPICS support modules should be installed and ready for use.
@@ -135,6 +143,7 @@ Automated EtherCAT Setup with EPICS
 To automate the installation and setup of EtherCAT functionality with EPICS, follow these steps:
 
 1. Open a terminal window and **cd** into ``.../EPICS/scripts/``.
+
 2. Ensure you have the necessary permissions to execute the script:
 
 .. code-block:: console
@@ -148,7 +157,9 @@ To automate the installation and setup of EtherCAT functionality with EPICS, fol
     $ sudo ./epics-ethercat_setup.sh
 
 4. You will be prompted to enter your EtherLAB directory (e.g. ``.../EtherLAB/ethercat-master-etherlab/``). Enter the path and press Enter.
+
 5. The script will clone the necessary repositories, install required libraries, and compile the EtherCAT modules into ``.../EPICS/ethercat``.
+
 6. The script will also configure the necessary paths and environment variables.
 
 After completing these steps, your EtherCAT functionality with EPICS should be installed and ready for use.
