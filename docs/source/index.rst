@@ -28,5 +28,6 @@ To start from the beginning, check out our introduction_!
    introduction
    quick_setup
    kernel_setup
+   manual_setup
 
    

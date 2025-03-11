@@ -23,4 +23,4 @@ EtherCAT modules can simply be connected to a computer using a normal LAN/Ethern
     If you want to also use EtherCAT on your machine, you may first need to install a new kernel. See our `guide for installing the new kernel here <kernel_setup.html>`_
 
 
-
+For a quick setup, you can follow our `quick setup guide <quick_setup.html>`_. If you encounter trouble during your approach, refer to the `manual setup guide <manual_setup.html>`_.
